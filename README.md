@@ -1,2 +1,2 @@
 # input-validation-service
-Microservice for validating user input to weather app
+CS 361 Microservice for validating user input to partner's weather app
