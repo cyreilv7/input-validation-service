@@ -1,16 +1,11 @@
 import 'dotenv/config';
 import fetch from 'node-fetch';
-import chalk from 'chalk';
 
 const API_KEY = process.env.ZIPCODESTACK_API_KEY;
 
 function normalize(zipcode) {
     const normalizedZip = zipcode.trim();
     return normalizedZip;
-}
-
-function showError(err) {
-    console.error(chalk.red(`ERROR: ${err.message}`));
 }
 
 async function isValidZipcode(zipcode) {
@@ -36,17 +31,19 @@ async function isValidZipcode(zipcode) {
 async function validateInput (req, res) {
     if (req.query.zipcode) {
         try {
-            const isValid = await isValidZipcode(req.query.zipcode);
+            const zipcode = req.query.zipcode;
+            const isValid = await isValidZipcode(zipcode);
             const data = {
-                'isValidZipCode': isValid
+                'isValidZipcode': isValid
             }
             res.status(200).json(data);
         } catch (err) {
-            showError(err);
             res.status(500).send("Internal server error");
+            throw err;
         }
+
     } else {
-        res.status(400).send("Invalid request. Please check that the request's zipcode param or the API key is valid.");
+        res.status(400).send("Invalid request. Please check that the request's zipcode param");
     }
 }
 
