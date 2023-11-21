@@ -34,4 +34,4 @@ processData(zipcode);
 ```
 
 ## UML Diagram
-<img src="https://github.com/cyreilv7/input-validation-service/assets/19630359/ce19dae8-ea2a-4641-a450-e96f8fe5b739" width="800">
+<img src="https://github.com/cyreilv7/input-validation-service/assets/19630359/7675fc08-dabe-4a30-a60f-27d1b39a3bd0" width="800">
