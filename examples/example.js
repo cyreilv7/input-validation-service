@@ -4,7 +4,7 @@ function processData(data) {
 }
 
 async function validateZipcode() {
-    const url = `http://localhost:${3000 || process.env.PORT}/api/validateInput?zipcode=01851`;
+    const url = `http://localhost:${3000 || process.env.PORT}/api/validateInput?zipcode=dfsfnfsd`;
     const options = {
         method: 'GET',
     }
