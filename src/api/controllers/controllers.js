@@ -1,5 +1,6 @@
 import 'dotenv/config';
-import fetch from 'node-fetch'
+import fetch from 'node-fetch';
+import chalk from 'chalk';
 
 const API_KEY = process.env.ZIPCODESTACK_API_KEY;
 
@@ -8,7 +9,14 @@ function normalize(zipcode) {
     return normalizedZip;
 }
 
+function showError(err) {
+    console.error(chalk.red(`ERROR: ${err.message}`));
+}
+
 async function isValidZipcode(zipcode) {
+    if (!API_KEY) {
+        throw Error('Invalid API Key');
+    }
     zipcode = normalize(zipcode);
     const url = `https://api.zipcodestack.com/v1/search?codes=${zipcode}&country=us`;
     const options = {
@@ -21,21 +29,24 @@ async function isValidZipcode(zipcode) {
         .then(res => res.json())
         .then(data => Object.keys(data.results).length !== 0)
         .catch(err => {
-            console.error('Error: ', err);
-            return false;
+            throw Error(err.message);
         })
 }
 
-const validateInput = async (req, res) => {
+async function validateInput (req, res) {
     if (req.query.zipcode) {
-        if (await isValidZipcode(req.query.zipcode)) {
-            res.status(200).send('is valid');
-        } else {
-            res.status(400).send('is not valid');
+        try {
+            const isValid = await isValidZipcode(req.query.zipcode);
+            const data = {
+                'isValidZipCode': isValid
+            }
+            res.status(200).json(data);
+        } catch (err) {
+            showError(err);
+            res.status(500).send("Internal server error");
         }
-        
     } else {
-        res.status(500).send('Invalid request, check query parameter for "zipcode" param');
+        res.status(400).send("Invalid request. Please check that the request's zipcode param or the API key is valid.");
     }
 }
 
